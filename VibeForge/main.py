@@ -5,7 +5,6 @@ from src.process_issues import process_raw_data
 from src.create_documents import create_documents
 from src.embeddings import get_embedding_model
 from src.vector_db import create_vector_db
-
 from src.find_similar_issues import find_similar_issues
 from src.llm_issue_analyzer import analyze_issue
 from src.llm_duplicate_analyzer import analyze_duplicates
