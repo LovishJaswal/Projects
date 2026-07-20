@@ -1,8 +1,9 @@
-import requests
-from pathlib import Path
 import json
-from dotenv import load_dotenv
 import os
+from pathlib import Path
+
+import requests
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -23,14 +24,28 @@ def fetch_issues(repo: str):
     }
 
     while True:
-        try:
-            url = f"https://api.github.com/repos/{repo}/issues?page={page}&per_page=100"
+        url = (
+            f"https://api.github.com/repos/{repo}/issues"
+            f"?page={page}&per_page=100"
+        )
 
+        try:
             response = requests.get(
                 url,
                 headers=headers,
                 timeout=30,
             )
+
+            if response.status_code == 422:
+                error = response.json()
+
+                if "cursor based pagination" in error.get("message", "").lower():
+                    print("\nLarge repository detected.")
+                    print("GitHub requires cursor-based pagination.")
+                    print(f"Fetched {len(all_issues)} issues before stopping.")
+                    break
+
+                raise Exception(error.get("message", "Unknown GitHub error."))
 
             response.raise_for_status()
 
