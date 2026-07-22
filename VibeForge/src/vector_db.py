@@ -1,5 +1,7 @@
 from pathlib import Path
 import shutil
+import gc
+import time
 
 from langchain_chroma import Chroma
 
@@ -9,9 +11,21 @@ CHROMA_DB_PATH = Path("data/chroma_db")
 def create_vector_db(documents, embedding_model):
     print("Creating vector database...")
 
+    # Force cleanup of any lingering Chroma objects
+    gc.collect()
+
     if CHROMA_DB_PATH.exists():
-        shutil.rmtree(CHROMA_DB_PATH)
-        print("Removed old database.")
+        for attempt in range(5):
+            try:
+                shutil.rmtree(CHROMA_DB_PATH)
+                print("Removed old database.")
+                break
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                print("Database is busy. Retrying...")
+                gc.collect()
+                time.sleep(1)
 
     print("Generating embeddings and indexing documents... This may take a minute.")
 

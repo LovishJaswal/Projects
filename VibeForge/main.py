@@ -7,7 +7,7 @@ from src.embeddings import get_embedding_model
 from src.vector_db import create_vector_db
 from src.find_similar_issues import find_similar_issues
 from src.llm_issue_analyzer import analyze_issue
-from src.llm_duplicate_analyzer import analyze_duplicates
+from src.llm_related_issues import analyze_related_issues
 
 
 def build_repository(repo_name):
@@ -33,8 +33,7 @@ Your repository is ready for analysis.
 
 There you can:
 - 📝 Analyze GitHub issues
-- 🔍 Find similar issues
-- 🤖 Detect possible duplicates
+- 🔍 Find related issues
 """
 
     except Exception as e:
@@ -52,13 +51,19 @@ Please enter a GitHub issue description and click **Analyze**.
             "",
         )
 
+    # Analyze the issue
     issue_analysis = analyze_issue(query)
 
-    retrieved_issues = find_similar_issues(query, k=3)
+    # Retrieve related issues
+    retrieved_issues = find_similar_issues(query, k=10)
 
-    duplicate_analysis = analyze_duplicates(query, retrieved_issues)
+    # Analyze related issues
+    related_issues_analysis = analyze_related_issues(
+        query,
+        retrieved_issues,
+    )
 
-    return issue_analysis, duplicate_analysis
+    return issue_analysis, related_issues_analysis
 
 
 with gr.Blocks(title="VibeForge") as demo:
@@ -118,8 +123,7 @@ Describe a GitHub issue below and click **Analyze**.
 
 VibeForge will:
 - 📝 Analyze the issue
-- 🔍 Search for similar issues
-- 🤖 Detect possible duplicates
+- 🔍 Find related issues
 """
         )
 
@@ -135,15 +139,14 @@ VibeForge will:
         )
 
         issue_output = gr.Markdown(label="Issue Analysis")
-
-        duplicate_output = gr.Markdown(label="Duplicate Analysis")
+        related_output = gr.Markdown(label="Related Issues")
 
         analyze_btn.click(
             fn=analyze,
             inputs=query,
             outputs=[
                 issue_output,
-                duplicate_output,
+                related_output,
             ],
             show_progress="full",
         )

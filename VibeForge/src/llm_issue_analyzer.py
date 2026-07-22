@@ -21,7 +21,8 @@ def analyze_issue(query: str):
         Rules:
         - Do NOT invent missing details.
         - Do NOT assume the programming language, framework, library, or repository unless explicitly mentioned.
-        - If the input is too short or lacks enough context (for example, only an issue number, a title, or random text), clearly state that there is insufficient information.
+        - If the input is too short or lacks enough context (for example, only an issue number, a title, a single word like "DOM", or random text), clearly state that there is insufficient information.
+        - Do not speculate or infer details that are not explicitly provided.
         - Base every conclusion only on the provided issue description.
 
         Issue Description:
@@ -33,7 +34,7 @@ def analyze_issue(query: str):
 
         ## Summary
         Write a concise 2–3 sentence summary.
-        If there is insufficient information, state that explicitly.
+        If there is insufficient information, explicitly state that the issue description is too brief to determine the user's intent.
 
         ## Category
         Choose exactly one:
@@ -64,12 +65,16 @@ def analyze_issue(query: str):
 
         ## Suggested Labels
         Return 2–5 GitHub labels as bullet points.
-        If insufficient information, return:
+        If insufficient information, return exactly:
         - needs-information
 
         ## Recommended Next Step
         Provide exactly one actionable recommendation.
-        If insufficient information, ask the reporter to provide a reproducible example or more details.
+        If insufficient information, ask the reporter to provide:
+        - Expected behavior
+        - Actual behavior
+        - Steps to reproduce
+        - Any relevant logs or screenshots
         """
 
     response = client.chat.completions.create(
