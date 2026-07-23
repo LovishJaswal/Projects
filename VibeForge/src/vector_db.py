@@ -11,7 +11,6 @@ CHROMA_DB_PATH = Path("data/chroma_db")
 def create_vector_db(documents, embedding_model):
     print("Creating vector database...")
 
-    # Force cleanup of any lingering Chroma objects
     gc.collect()
 
     if CHROMA_DB_PATH.exists():

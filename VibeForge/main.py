@@ -23,18 +23,18 @@ def build_repository(repo_name):
         create_vector_db(documents, embedding_model)
 
         return """
-# ✅ Repository Indexed Successfully!
-
-Your repository is ready for analysis.
-
-### What's next?
-
-➡️ Open the **Issue Analyzer** tab.
-
-There you can:
-- 📝 Analyze GitHub issues
-- 🔍 Find related issues
-"""
+            # ✅ Repository Indexed Successfully!
+            
+            Your repository is ready for analysis.
+            
+            ### What's next?
+            
+            ➡️ Open the **Issue Analyzer** tab.
+            
+            There you can:
+            - 📝 Analyze GitHub issues
+            - 🔍 Find related issues
+            """
 
     except Exception as e:
         return f"❌ {e}"
@@ -44,20 +44,17 @@ def analyze(query):
     if not query.strip():
         return (
             """
-# 👋 No Issue Description
-
-Please enter a GitHub issue description and click **Analyze**.
-""",
+            # 👋 No Issue Description
+            
+            Please enter a GitHub issue description and click **Analyze**.
+            """,
             "",
         )
 
-    # Analyze the issue
     issue_analysis = analyze_issue(query)
 
-    # Retrieve related issues
     retrieved_issues = find_similar_issues(query, k=10)
 
-    # Analyze related issues
     related_issues_analysis = analyze_related_issues(
         query,
         retrieved_issues,
@@ -70,22 +67,22 @@ with gr.Blocks(title="VibeForge") as demo:
 
     gr.Markdown(
         """
-# 🚀 VibeForge
-
-### Helping Open Source Move Faster.
-
-Index a public GitHub repository and analyze issues using AI.
-"""
+        # 🚀 VibeForge
+        
+        ### Helping Open Source Move Faster.
+        
+        Index a public GitHub repository and analyze issues using AI.
+        """
     )
 
     with gr.Tab("📦 Repository Setup"):
 
         gr.Markdown(
             """
-Enter the GitHub repository in the format:
-
-`owner/repository`
-"""
+            Enter the GitHub repository in the format:
+            
+            `owner/repository`
+            """
         )
 
         repo = gr.Textbox(
@@ -100,12 +97,12 @@ Enter the GitHub repository in the format:
 
         setup_output = gr.Markdown(
             """
-### Ready to Index
-
-Enter a repository name above and click **Index Repository**.
-
-⚠️ **Note:** Creating embeddings and the vector database may take a few minutes depending on the repository size.
-"""
+            ### Ready to Index
+            
+            Enter a repository name above and click **Index Repository**.
+            
+            ⚠️ **Note:** Creating embeddings and the vector database may take a few minutes depending on the repository size.
+            """
         )
 
         setup_btn.click(
@@ -119,12 +116,12 @@ Enter a repository name above and click **Index Repository**.
 
         gr.Markdown(
             """
-Describe a GitHub issue below and click **Analyze**.
-
-VibeForge will:
-- 📝 Analyze the issue
-- 🔍 Find related issues
-"""
+            Describe a GitHub issue below and click **Analyze**.
+            
+            VibeForge will:
+            - 📝 Analyze the issue
+            - 🔍 Find related issues
+            """
         )
 
         query = gr.Textbox(

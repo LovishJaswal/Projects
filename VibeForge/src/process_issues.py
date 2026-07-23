@@ -38,7 +38,7 @@ def clean_issue(issue):
         "comments": issue["comments"],
         "created_at": issue["created_at"],
         "updated_at": issue["updated_at"],
-        "html_url": issue["html_url"],   # Keep this
+        "html_url": issue["html_url"],
         "assignees": [assignee["login"] for assignee in issue["assignees"]],
         "milestone": issue["milestone"]["title"] if issue["milestone"] else None,
         "repository": issue["repository_url"].split("/")[-1],

@@ -12,8 +12,6 @@ client = OpenAI(
     api_key=os.getenv("OPEN_ROUTER_API_KEY"),
 )
  
-# Above this word count, treat the query as already detailed enough that
-# rewriting it (HyDE) is more likely to drift the embedding than help it.
 HYDE_WORD_THRESHOLD = 20
  
  
@@ -91,14 +89,10 @@ def hyde_query(query: str) -> str:
 def find_similar_issues(query: str, k: int = 10):
     print("Finding similar issues...")
  
-    # Don't attempt duplicate detection for vague queries.
     if is_query_too_vague(query):
         print("Issue description is too vague for duplicate detection.")
         return None
  
-    # If the query is already a detailed issue description (e.g. a full
-    # title + body pasted in), embed it directly. Rewriting it via HyDE can
-    # drift the embedding away from an exact/near-exact match.
     if is_query_already_detailed(query):
         print("Query is already detailed; skipping HyDE expansion.")
         search_query = query
